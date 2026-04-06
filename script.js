@@ -1,113 +1,130 @@
-let gold = 0;
-let level = 1;
-let xp = 0;
-let xpMax = 100;
+// ===== SPIELDATEN =====
+let player = JSON.parse(localStorage.getItem("mythicSave")) || {
+  gold: 100,
+  level: 1,
+  xp: 0,
+  xpMax: 100,
+  inventory: [],
+  kills: 0
+};
 
-let enemyHP = 20;
-let enemyMaxHP = 20;
+let enemyHP = 30;
+let enemyMaxHP = 30;
 
-let questKills = 0;
-let questGoal = 5;
+// ===== SOUNDS (lizenzfrei) =====
+const clickSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/10/audio_c863c3b1f1.mp3");
+const hitSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9bcb1b.mp3");
+const levelSound = new Audio("https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c1d6b8b3f.mp3");
 
-let inventory = [];
-
-// Sounds
-let hitSound = document.getElementById("hitSound");
-let clickSound = document.getElementById("clickSound");
-let levelSound = document.getElementById("levelSound");
-
-// Laden
-if(localStorage.getItem("save")){
-  let save = JSON.parse(localStorage.getItem("save"));
-  gold = save.gold;
-  level = save.level;
-  xp = save.xp;
-  inventory = save.inventory;
+// ===== SAVE =====
+function save() {
+  localStorage.setItem("mythicSave", JSON.stringify(player));
 }
 
-function playSound(sound){
-  sound.currentTime = 0;
-  sound.play();
+// ===== ITEM SYSTEM =====
+const rarities = ["Gewöhnlich", "Selten", "Episch", "Legendär"];
+
+function createItem() {
+  let r = rarities[Math.floor(Math.random() * rarities.length)];
+  return `${r} Schwert`;
 }
 
-// UI
-function updateUI(){
-  document.getElementById("gold").innerText = gold;
-  document.getElementById("level").innerText = level;
-  document.getElementById("xp").innerText = xp;
-  document.getElementById("xpMax").innerText = xpMax;
-  document.getElementById("enemy").innerText = "Schleim (HP: " + enemyHP + ")";
-  document.getElementById("quest").innerText = `Besiege ${questGoal} Gegner (${questKills}/${questGoal})`;
+// ===== UI =====
+function updateUI() {
+  document.getElementById("level").textContent = player.level;
+  document.getElementById("xp").textContent = player.xp;
+  document.getElementById("xpMax").textContent = player.xpMax;
+  document.getElementById("gold").textContent = player.gold;
+
+  document.getElementById("enemy").textContent =
+    `Schleim (HP: ${enemyHP})`;
+
+  document.getElementById("quest").textContent =
+    `Besiege 10 Gegner (${player.kills}/10)`;
 
   let inv = document.getElementById("inventory");
   inv.innerHTML = "";
-  inventory.forEach(i => {
+
+  player.inventory.forEach(item => {
     let li = document.createElement("li");
-    li.innerText = i;
+    li.textContent = item;
     inv.appendChild(li);
   });
 }
 
-// Angriff
-function attack(){
-  playSound(clickSound);
-
-  let dmg = Math.floor(Math.random() * 10) + 5;
-  enemyHP -= dmg;
-
-  // Animation
-  let box = document.getElementById("enemyBox");
+// ===== ANIMATION =====
+function hitAnim() {
+  const box = document.getElementById("enemyBox");
   box.classList.add("hit");
 
   setTimeout(() => {
     box.classList.remove("hit");
-  }, 200);
+  }, 150);
+}
 
-  playSound(hitSound);
+// ===== KAMPF =====
+function attack() {
+  clickSound.currentTime = 0;
+  clickSound.play();
 
-  if(enemyHP <= 0){
-    winFight();
+  let dmg = Math.floor(Math.random() * 10) + 5;
+  enemyHP -= dmg;
+
+  hitAnim();
+
+  hitSound.currentTime = 0;
+  hitSound.play();
+
+  if (enemyHP <= 0) {
+    win();
   }
 
   updateUI();
 }
 
-// Sieg
-function winFight(){
-  gold += Math.floor(Math.random() * 20) + 10;
-  xp += 20;
+// ===== SIEG =====
+function win() {
+  player.gold += Math.floor(Math.random() * 30) + 20;
+  player.xp += 25;
+  player.kills++;
 
-  if(Math.random() < 0.3){
-    inventory.push("🗡️ Schwert");
+  // Loot
+  if (Math.random() < 0.4) {
+    player.inventory.push(createItem());
   }
 
-  questKills++;
+  // Level Up
+  if (player.xp >= player.xpMax) {
+    player.xp = 0;
+    player.level++;
+    player.xpMax += 50;
 
-  if(xp >= xpMax){
-    xp = 0;
-    level++;
-    xpMax += 50;
-    playSound(levelSound);
+    levelSound.currentTime = 0;
+    levelSound.play();
   }
 
-  enemyMaxHP += 5;
+  // Neuer Gegner
+  enemyMaxHP += 10;
   enemyHP = enemyMaxHP;
 
-  saveGame();
+  save();
 }
 
-// Speichern
-function saveGame(){
-  localStorage.setItem("save", JSON.stringify({
-    gold, level, xp, inventory
-  }));
+// ===== SHOP =====
+function buyPotion() {
+  if (player.gold >= 50) {
+    player.gold -= 50;
+    player.inventory.push("❤️ Heiltrank");
+    save();
+    updateUI();
+  }
 }
 
-// Idle
+// ===== IDLE =====
 setInterval(() => {
-  gold += 1;
+  player.gold += 2;
   updateUI();
 }, 3000);
 
-// Start
+// ===== START =====
 updateUI();
