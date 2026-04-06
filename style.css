@@ -1,8 +1,34 @@
 body {
-  background: #0f172a;
+  background: linear-gradient(black, #020617);
   color: white;
-  font-family: Arial;
   text-align: center;
+  font-family: Arial;
+}
+
+.title {
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 10px gold; }
+  to { text-shadow: 0 0 25px orange; }
+}
+
+.card {
+  background: #111;
+  padding: 15px;
+  border-radius: 10px;
+  margin: 10px;
+  animation: fadeIn 1s;
+}
+
+.enemyBox {
+  transition: transform 0.2s, background 0.2s;
+}
+
+.enemyBox.hit {
+  transform: scale(1.1);
+  background: darkred;
 }
 
 button {
@@ -12,8 +38,16 @@ button {
   background: gold;
   border: none;
   border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-hr {
-  margin: 20px;
+button:hover {
+  transform: scale(1.1);
+  background: orange;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
