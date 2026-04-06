@@ -11,6 +11,11 @@ let questGoal = 5;
 
 let inventory = [];
 
+// Sounds
+let hitSound = document.getElementById("hitSound");
+let clickSound = document.getElementById("clickSound");
+let levelSound = document.getElementById("levelSound");
+
 // Laden
 if(localStorage.getItem("save")){
   let save = JSON.parse(localStorage.getItem("save"));
@@ -20,7 +25,12 @@ if(localStorage.getItem("save")){
   inventory = save.inventory;
 }
 
-// UI Update
+function playSound(sound){
+  sound.currentTime = 0;
+  sound.play();
+}
+
+// UI
 function updateUI(){
   document.getElementById("gold").innerText = gold;
   document.getElementById("level").innerText = level;
@@ -29,18 +39,31 @@ function updateUI(){
   document.getElementById("enemy").innerText = "Schleim (HP: " + enemyHP + ")";
   document.getElementById("quest").innerText = `Besiege ${questGoal} Gegner (${questKills}/${questGoal})`;
 
-  let invList = document.getElementById("inventory");
-  invList.innerHTML = "";
-  inventory.forEach(item => {
+  let inv = document.getElementById("inventory");
+  inv.innerHTML = "";
+  inventory.forEach(i => {
     let li = document.createElement("li");
-    li.innerText = item;
-    invList.appendChild(li);
+    li.innerText = i;
+    inv.appendChild(li);
   });
 }
 
 // Angriff
 function attack(){
-  enemyHP -= Math.floor(Math.random() * 10) + 5;
+  playSound(clickSound);
+
+  let dmg = Math.floor(Math.random() * 10) + 5;
+  enemyHP -= dmg;
+
+  // Animation
+  let box = document.getElementById("enemyBox");
+  box.classList.add("hit");
+
+  setTimeout(() => {
+    box.classList.remove("hit");
+  }, 200);
+
+  playSound(hitSound);
 
   if(enemyHP <= 0){
     winFight();
@@ -54,37 +77,33 @@ function winFight(){
   gold += Math.floor(Math.random() * 20) + 10;
   xp += 20;
 
-  // Loot Chance
   if(Math.random() < 0.3){
-    inventory.push("Schwert");
+    inventory.push("🗡️ Schwert");
   }
 
-  // Quest Fortschritt
   questKills++;
 
-  // Level Up
   if(xp >= xpMax){
     xp = 0;
     level++;
     xpMax += 50;
+    playSound(levelSound);
   }
 
-  // Neuer Gegner
   enemyMaxHP += 5;
   enemyHP = enemyMaxHP;
 
-  // Speichern
   saveGame();
 }
 
-// Speicherfunktion
+// Speichern
 function saveGame(){
   localStorage.setItem("save", JSON.stringify({
     gold, level, xp, inventory
   }));
 }
 
-// Idle System (automatisch Gold)
+// Idle
 setInterval(() => {
   gold += 1;
   updateUI();
