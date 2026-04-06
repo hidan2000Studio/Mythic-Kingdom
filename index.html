@@ -6,10 +6,28 @@
 </head>
 <body>
 
-<h1>Mythic Kingdom</h1>
+<h1>⚔️ Mythic Kingdom</h1>
+
+<p>Level: <span id="level">1</span></p>
+<p>XP: <span id="xp">0</span> / <span id="xpMax">100</span></p>
 <p>Gold: <span id="gold">0</span></p>
 
-<button onclick="addGold()">Gold verdienen</button>
+<hr>
+
+<h2>🧟 Gegner</h2>
+<p id="enemy">Schleim (HP: 20)</p>
+
+<button onclick="attack()">Angreifen</button>
+
+<hr>
+
+<h2>🎒 Inventar</h2>
+<ul id="inventory"></ul>
+
+<hr>
+
+<h2>📜 Quest</h2>
+<p id="quest">Besiege 5 Gegner (0/5)</p>
 
 <script src="script.js"></script>
 
