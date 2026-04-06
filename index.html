@@ -1,9 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-  <title>Mythic Kingdom</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mythic Kingdom</title>
+
+<link rel="stylesheet" href="style.css">
+<script src="script.js" defer></script>
 </head>
+
 <body>
 
 <h1 class="title">⚔️ Mythic Kingdom</h1>
@@ -14,30 +19,26 @@
   <p>Gold: <span id="gold">0</span></p>
 </div>
 
-<hr>
-
-<div class="enemyBox" id="enemyBox">
+<div id="enemyBox" class="card">
   <h2>🧟 Gegner</h2>
-  <p id="enemy">Schleim (HP: 20)</p>
-  <button onclick="attack()">Angreifen</button>
+  <p id="enemy">Schleim (HP: 30)</p>
+  <button onclick="attack()">⚔️ Angreifen</button>
 </div>
 
-<hr>
+<div class="card">
+  <h2>🎒 Inventar</h2>
+  <ul id="inventory"></ul>
+</div>
 
-<h2>🎒 Inventar</h2>
-<ul id="inventory"></ul>
+<div class="card">
+  <h2>🏪 Shop</h2>
+  <button onclick="buyPotion()">❤️ Heiltrank (50 Gold)</button>
+</div>
 
-<hr>
-
-<h2>📜 Quest</h2>
-<p id="quest"></p>
-
-<!-- Sounds -->
-<audio id="hitSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9bcb1b.mp3"></audio>
-<audio id="clickSound" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c863c3b1f1.mp3"></audio>
-<audio id="levelSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c1d6b8b3f.mp3"></audio>
-
-<script src="script.js"></script>
+<div class="card">
+  <h2>📜 Quest</h2>
+  <p id="quest">Besiege 10 Gegner (0/10)</p>
+</div>
 
 </body>
 </html>
