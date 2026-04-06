@@ -6,18 +6,21 @@
 </head>
 <body>
 
-<h1>⚔️ Mythic Kingdom</h1>
+<h1 class="title">⚔️ Mythic Kingdom</h1>
 
-<p>Level: <span id="level">1</span></p>
-<p>XP: <span id="xp">0</span> / <span id="xpMax">100</span></p>
-<p>Gold: <span id="gold">0</span></p>
+<div class="card">
+  <p>Level: <span id="level">1</span></p>
+  <p>XP: <span id="xp">0</span> / <span id="xpMax">100</span></p>
+  <p>Gold: <span id="gold">0</span></p>
+</div>
 
 <hr>
 
-<h2>🧟 Gegner</h2>
-<p id="enemy">Schleim (HP: 20)</p>
-
-<button onclick="attack()">Angreifen</button>
+<div class="enemyBox" id="enemyBox">
+  <h2>🧟 Gegner</h2>
+  <p id="enemy">Schleim (HP: 20)</p>
+  <button onclick="attack()">Angreifen</button>
+</div>
 
 <hr>
 
@@ -27,7 +30,12 @@
 <hr>
 
 <h2>📜 Quest</h2>
-<p id="quest">Besiege 5 Gegner (0/5)</p>
+<p id="quest"></p>
+
+<!-- Sounds -->
+<audio id="hitSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9bcb1b.mp3"></audio>
+<audio id="clickSound" src="https://cdn.pixabay.com/download/audio/2022/03/10/audio_c863c3b1f1.mp3"></audio>
+<audio id="levelSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_7c1d6b8b3f.mp3"></audio>
 
 <script src="script.js"></script>
 
